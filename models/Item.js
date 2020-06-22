@@ -4,11 +4,12 @@ const mongoose = require('mongoose');
 
 // define schema
 const ItemSchema = mongoose.Schema({
+    tags: [String],
     name: String,
     price: Number,
-    sell: Boolean,
-    picture: String,
-    tags: [String],
+    description: String,
+    photo: String,
+    type: Boolean,
 });
 
 // create model

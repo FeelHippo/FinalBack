@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const validator = require('validator');
 
 class LoginController {
 
@@ -9,7 +10,16 @@ class LoginController {
             const email = req.body.email;
             const password = req.body.password;
 
-            // validate !!!
+            // validate
+            if(!validator.isEmail(email) || validator.isEmpty(email))
+                return res
+                    .status(202)
+                    .json({ success: false, msg: "Not a valid email." }) 
+
+            if(!validator.isAlphanumeric(password) || validator.isEmpty(password))
+            return res
+                .status(202)
+                .json({ success: false, msg: "Password must contain alphanumeric characters." })
 
             // make sure user is not existing
             const existingUser = await User.findOne({ email });
