@@ -15,8 +15,8 @@ class LoginController {
             const existingUser = await User.findOne({ email });
             if(existingUser)
                 return res
-                    .status(400)
-                    .json({ msg: "An account with this email already exists." })
+                    .status(202)
+                    .json({ success: false, msg: "An account with this email already exists." })
             
             // encrypt password
             const salt = await bcrypt.genSalt();
@@ -39,12 +39,13 @@ class LoginController {
         try {
             const email = req.body.email;
             const password = req.body.password;
-
             // query to DDBB
             const user = await User.findOne({ email });
             // if no user is found, or if password is wrong:
             if (!user || !await bcrypt.compare(password, user.password)) {
-                return res.status(403).json({ email, password: '', success: false });
+                return res
+                    .status(202)
+                    .json({ success: false, msg: "Wrong credentials, try again." });
             }
 
             const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
@@ -53,10 +54,31 @@ class LoginController {
 
             // found user, and password matches
             return res.status(200).json({
+                email, 
+                password, 
+                success: true,
                 token,
-                user: { email, password, success: true }
             }); 
 
+        } catch (error) {
+            console.log(error, '@ Login Controller');
+            res.status(500).json({ error: error.message });
+        }
+    }
+
+    async verify_token(req, res) {
+        try {
+            
+            const token = req.header('x-auth-token');
+            if (!token) return res.json(false);
+            
+            const verified = jwt.verify(token, process.env.JWT_SECRET);
+            if (!verified) return res.json(false);
+            
+            const user = await User.findById(verified._id);
+            if (!user) return res.json(false);
+            console.log(user);
+            return res.json(true);
         } catch (error) {
             console.log(error, '@ Login Controller');
             res.status(500).json({ error: error.message });
