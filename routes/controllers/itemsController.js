@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Item = mongoose.model('Item');
 const valid_tags = require('../../models/Tags');
 const filter_ads = require('../utils/url_query');
+const { validationResult } = require('express-validator');
 
 class ItemsController {
 
@@ -11,7 +12,7 @@ class ItemsController {
 
     async search(req, res, err) {
         try {
-            let params = filter_ads(req)
+            let params = filter_ads(req);
             let items = await Item.find(params);
             if (items) {
                 return res.status(200).json(items);
@@ -29,6 +30,7 @@ class ItemsController {
     }
 
     async searchOne(req, res, err) {
+        
         try {
             let { id } = req.params;
             let item = await Item.findById(id);
@@ -48,12 +50,19 @@ class ItemsController {
     }
 
     async add (req, res) {
-        console.log(req.body)
-        let item = await Item.create(req.body);
-        return res.status(201).send({
-            error: false,
-            item
-        })
+
+        try {
+            const errors = validationResult(req);
+            if(!errors.isEmpty()) {
+                return res.status(422).json({ msg: errors.array()[0] })
+            };
+            const newItem = new Item(req.body);
+            const savedItem = await newItem.save();
+
+            res.status(201).send(savedItem);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     async modify (req, res) {

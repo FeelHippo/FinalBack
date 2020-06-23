@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 // define schema
 const ItemSchema = mongoose.Schema({
-    tags: [String],
+    tags: [{ type: String }],
     name: String,
     price: Number,
     description: String,
