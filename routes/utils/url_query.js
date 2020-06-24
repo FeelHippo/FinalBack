@@ -9,11 +9,9 @@ const filter_ads = (req) => {
     if (name && name !== 'undefined' && name !== '') {
         params.name = name;
     };
-    
-    if (type && type !== 'undefined') {
-        params.sell = (type === 'true') ? true : false;
-    }
-    
+
+    params.type = (type === undefined || type.toLowerCase() === 'false' ? false : true)
+        
     params.price = {$gte : parseFloat(price_low), $lte : parseFloat(price_high)}
     
     if (req.query.tags !== 'undefined' && typeof req.query.tags == 'string') {
@@ -21,7 +19,6 @@ const filter_ads = (req) => {
         params.tags[0] = JSON.parse(req.query.tags)[0];
         params.tags[1] = JSON.parse(req.query.tags)[1];
     }
-    
     return params;
 }
 

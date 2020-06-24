@@ -66,14 +66,16 @@ class ItemsController {
     }
 
     async modify (req, res) {
-        const { id } = req.params;
+        
+        try {
+            const { id } = req.params;
 
-        let item = await Item.findByIdAndUpdate(id, req.body);
+            let item = await Item.findByIdAndUpdate(id, req.body);
 
-        return res.status(202).send({
-            error: false,
-            item
-        })
+            return res.status(201).send(item)
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     async delete (req, res) {
