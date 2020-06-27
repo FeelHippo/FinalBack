@@ -2,6 +2,8 @@ const { check, validationResult } = require('express-validator');
 const itemsController = require('../controllers/itemsController');
 
 module.exports = (app) => {
+    // return most recent ads
+    app.get(`/api/item/home`, itemsController.home);
     // return all valid tags
     app.get(`/api/tags`, itemsController.tags);
     // ads search one

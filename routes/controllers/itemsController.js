@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const moment = require('moment');
 const Item = mongoose.model('Item');
 const valid_tags = require('../../models/Tags');
 const filter_ads = require('../utils/url_query');
@@ -8,6 +9,25 @@ class ItemsController {
 
     async tags(req, res) {
         return res.status(200).send(valid_tags.array);
+    }
+
+    async home(req, res) {
+        
+        try {
+            // max 1 week old items
+            let items = await Item.find({
+                created: {$gt: moment().subtract(1, 'week')}
+            })
+            if (items) {
+                return res.status(200).json(items);
+            } else {
+                return res
+                    .status(202)
+                    .json({ msg: "No ads found!" })
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     async search(req, res, err) {
@@ -25,7 +45,6 @@ class ItemsController {
 
         } catch (error) {
             console.log(error);
-            next(err);
         }
     }
 
