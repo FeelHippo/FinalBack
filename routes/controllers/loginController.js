@@ -7,10 +7,13 @@ class LoginController {
 
     async register(req, res) {
         try {
-            const email = req.body.email;
-            const password = req.body.password;
+            const { username, email, password } = req.body;
 
             // validate
+            if(!validator.isAlphanumeric(username) || validator.isEmpty(username) || !validator.isLength(username, {min: 7, max: undefined}))
+            return res
+                .status(202)
+                .json({ success: false, msg: "Username must be alphanumeric, and be at least 7 characters long." })
             if(!validator.isEmail(email) || validator.isEmpty(email))
                 return res
                     .status(202)
@@ -33,6 +36,7 @@ class LoginController {
             const passwordHash = await bcrypt.hash(password, salt);
 
             const newUser = new User({
+                username,
                 email, 
                 password: passwordHash
             })
@@ -47,10 +51,9 @@ class LoginController {
 
     async login(req, res) {
         try {
-            const email = req.body.email;
-            const password = req.body.password;
+            const { username, password } = req.body;
             // query to DDBB
-            const user = await User.findOne({ email });
+            const user = await User.findOne({ username });
             // if no user is found, or if password is wrong:
             if (!user || !await bcrypt.compare(password, user.password)) {
                 return res
@@ -61,10 +64,10 @@ class LoginController {
             const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
                 expiresIn: '7d'
             })
-
             // found user, and password matches
             return res.status(200).json({
-                email, 
+                username,
+                email: user.email, 
                 password, 
                 success: true,
                 token,
