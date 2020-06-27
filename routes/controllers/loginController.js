@@ -97,6 +97,28 @@ class LoginController {
             res.status(500).json({ error: error.message });
         }
     }
+
+    async send_password(req, res) {
+        try {
+            const { email } = req.body;
+            // query to DDBB
+            const user = await User.findOne({ email: email });
+            // if no user is found, or if password is wrong:
+            if (!user) {
+                return res
+                    .status(202)
+                    .json({ msg: "Email not registered" });
+            }
+
+            user.sendEmail(process.env.ADMIN_EMAIL, 'Your Password', `Hi there, your password is ${user.password}`);
+
+            // found user, and password matches
+            return res.status(200).json({success: true});
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }
 
 module.exports = new LoginController;

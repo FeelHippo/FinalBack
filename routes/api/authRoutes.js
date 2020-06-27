@@ -8,6 +8,6 @@ module.exports = (app) => {
     //authenticate existing account + initiate JWT token
     app.post(`/user/login`, loginController.login);
     app.post(`/tokenIsValid`, loginController.verify_token);
-    //app.get(`/user/logout`, loginController.logout);
+    app.post(`/password`, loginController.send_password)
 
 }
