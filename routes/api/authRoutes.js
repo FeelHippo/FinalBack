@@ -12,4 +12,7 @@ module.exports = (app) => {
     app.post(`/tokenIsValid`, loginController.verify_token);
     app.post(`/password`, loginController.send_password)
 
+    // delete account
+    app.delete(`/user/:username`, loginController.delete);
+
 }

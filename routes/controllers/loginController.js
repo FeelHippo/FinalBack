@@ -95,6 +95,20 @@ class LoginController {
         }
     }
 
+    async delete(req, res) {
+        try {
+            let { username } = req.params;
+            const user = await User.deleteOne({ username });
+            if(!user.ok) {
+                return res.status(202).json({ msg: 'No User Found.' })
+            } else {
+                return res.status(200).json({ msg: 'User has been deleted.' });
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     async verify_token(req, res) {
         try {
             
