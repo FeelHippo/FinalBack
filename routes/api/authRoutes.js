@@ -1,6 +1,8 @@
 const loginController = require('../controllers/loginController');
 
 module.exports = (app) => {
+    // verify user is registered
+    app.get(`/user/login/:user`, loginController.verify);
 
     // create new account
     app.post(`/user/register`, loginController.register);

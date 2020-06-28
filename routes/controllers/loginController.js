@@ -5,6 +5,22 @@ const validator = require('validator');
 
 class LoginController {
 
+    async verify(req, res) {
+        try {
+            const { user } = req.params;
+            const exists = await User.findOne({ username: user });
+            if(!exists) {
+                return res
+                    .status(202)
+                    .json({ msg: "User not found!" })
+            } else {
+                return res.status(200).json(exists);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     async register(req, res) {
         try {
             const { username, email, password } = req.body;
