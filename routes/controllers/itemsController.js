@@ -68,8 +68,23 @@ class ItemsController {
         }
     }
 
-    async add (req, res) {
+    async user(req, res, err) {
 
+        try {
+            let { username } = req.params;
+            let items = await Item.find({ creator: username });
+            if(!items) {
+                return res.status(202).json({ msg: 'No Ads Found.' })
+            } else {
+                return res.status(200).json(items);
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async add (req, res) {
         try {
             const errors = validationResult(req);
             if(!errors.isEmpty()) {

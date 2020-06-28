@@ -10,12 +10,18 @@ module.exports = (app) => {
     app.get(`/api/item/:id`, itemsController.searchOne);
     // ads search
     app.get(`/api/item`, itemsController.search);
+    app.get(`/api/:username`, itemsController.user)
     // create ad, validate URL
     app.post(`/api/item`, [
-        check('name').isAlphanumeric().withMessage('Must be only alphabetical chars'),
+        check('name').custom((value,{req})=>{
+            if(isNaN(value)){
+                return true;
+            }else{
+                throw new Error('invalid name')
+            }
+        }),
         check('type').isBoolean(),
-        check('price').isNumeric().withMessage('Must be a higher than zero'),
-        check('photo').exists(),  
+        check('price').isNumeric().withMessage('Must be a higher than zero'),  
     ] , itemsController.add);
     // modify ad
     app.put(`/api/item/:id`, itemsController.modify);
