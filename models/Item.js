@@ -12,6 +12,8 @@ const ItemSchema = mongoose.Schema({
     description: String,
     photo: String,
     type: Boolean,
+    reserved: Boolean,
+    sold: Boolean,
 });
 
 // create model

@@ -102,7 +102,7 @@ class ItemsController {
     async modify (req, res) {
         const { _id } = req.body;
         try {
-
+            console.log('EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE', req.body)
             let item = await Item.findByIdAndUpdate(_id, req.body);
             if(!item) {
                 return res.status(422).json({ msg: "Something Went Wrong, Try Again." })
@@ -118,11 +118,11 @@ class ItemsController {
         const { id } = req.params;
 
         let item = await Item.findByIdAndDelete(id);
-
-        return res.status(202).send({
-            error: false,
-            item
-        })
+        if(!item) {
+            return res.status(422).json({ msg: "Something Went Wrong, Try Again." })
+        } else {
+            return res.status(202).json(item);
+        }
     }
 
 }
