@@ -65,6 +65,35 @@ class LoginController {
         }
     }
 
+    async update(req, res) {
+        try {
+            const { _id, username, email, password } = req.body;
+
+            // encrypt password
+            const salt = await bcrypt.genSalt();
+            const passwordHash = await bcrypt.hash(password, salt);
+            
+            const updatedUser = await User.findOneAndUpdate(_id, {
+                username: username, 
+                email: email,
+                password: passwordHash,
+            })
+
+            if(!updatedUser) {
+                return res
+                    .status(202)
+                    .json({ success: false, msg: "Something went wrong, try again." });
+            } else {
+                return res
+                    .status(200)
+                    .json(updatedUser);
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     async login(req, res) {
         try {
             const { username, password } = req.body;

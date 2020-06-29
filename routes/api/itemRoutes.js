@@ -24,7 +24,7 @@ module.exports = (app) => {
         check('price').isNumeric().withMessage('Must be a higher than zero'),  
     ] , itemsController.add);
     // modify ad
-    app.put(`/api/item/:id`, itemsController.modify);
+    app.put(`/api/item/change/`, itemsController.modify);
     // delete ad
     app.delete(`/api/item/:id`, itemsController.delete);
 }

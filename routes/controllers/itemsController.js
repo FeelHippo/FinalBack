@@ -88,7 +88,7 @@ class ItemsController {
         try {
             const errors = validationResult(req);
             if(!errors.isEmpty()) {
-                return res.status(422).json({ msg: errors.array()[0] })
+                return res.status(422).json({ msg: "Something Went Wrong, Try Again." })
             };
             const newItem = new Item(req.body);
             const savedItem = await newItem.save();
@@ -100,13 +100,15 @@ class ItemsController {
     }
 
     async modify (req, res) {
-        
+        const { _id } = req.body;
         try {
-            const { id } = req.params;
 
-            let item = await Item.findByIdAndUpdate(id, req.body);
-
-            return res.status(201).send(item)
+            let item = await Item.findByIdAndUpdate(_id, req.body);
+            if(!item) {
+                return res.status(422).json({ msg: "Something Went Wrong, Try Again." })
+            } else {
+                return res.status(201).json(item);
+            }
         } catch (error) {
             console.log(error);
         }

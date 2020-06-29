@@ -6,6 +6,8 @@ module.exports = (app) => {
 
     // create new account
     app.post(`/user/register`, loginController.register);
+    // update existing account
+    app.put(`/user/update`, loginController.update);
 
     //authenticate existing account + initiate JWT token
     app.post(`/user/login`, loginController.login);
