@@ -102,7 +102,6 @@ class ItemsController {
     async modify (req, res) {
         const { _id } = req.body;
         try {
-            console.log('EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE', req.body)
             let item = await Item.findByIdAndUpdate(_id, req.body);
             if(!item) {
                 return res.status(422).json({ msg: "Something Went Wrong, Try Again." })
