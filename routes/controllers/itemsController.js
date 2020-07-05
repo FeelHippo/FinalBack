@@ -73,10 +73,11 @@ class ItemsController {
         try {
             let { username } = req.params;
             let items = await Item.find({ creator: username });
+            let favorites = await Item.find({ favorite: username });
             if(!items) {
                 return res.status(202).json({ msg: 'No Ads Found.' })
             } else {
-                return res.status(200).json(items);
+                return res.status(200).json({items, favorites});
             }
 
         } catch (error) {

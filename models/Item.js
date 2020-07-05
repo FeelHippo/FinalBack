@@ -14,6 +14,7 @@ const ItemSchema = mongoose.Schema({
     type: Boolean,
     reserved: Boolean,
     sold: Boolean,
+    favorite: [{ type: String }],
 });
 
 // create model
