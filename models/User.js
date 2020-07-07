@@ -19,10 +19,18 @@ const UserSchema = mongoose.Schema({
 UserSchema.methods.sendEmail = async function(from, subject, body) {
     // create transporter
     const transporter = nodemailer.createTransport({
-        service: process.env.EMAIL_SERVICE, 
+        // production settings
+        // service: process.env.EMAIL_SERVICE, 
+        // auth: {
+        //     user: process.env.EMAIL_SERVICE_USER,
+        //     pass: process.env.EMAIL_SERVICE_PASS,
+        // }
+        // development settings
+        host: process.env.MAILTRAP_HOST,
+        port: process.env.MAILTRAP_PORT,
         auth: {
-            user: process.env.EMAIL_SERVICE_USER,
-            pass: process.env.EMAIL_SERVICE_PASS,
+            user: process.env.MAILTRAP_USERNAME,
+            pass: process.env.MAILTRAP_PASSWORD,
         }
     })
 

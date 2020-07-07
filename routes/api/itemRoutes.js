@@ -1,4 +1,4 @@
-const { check, validationResult } = require('express-validator');
+const { check } = require('express-validator');
 const itemsController = require('../controllers/itemsController');
 
 module.exports = (app) => {

@@ -2,6 +2,7 @@ const User = require('../../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const validator = require('validator');
+const emailTemplate = require('../../models/Email');
 
 class LoginController {
 
@@ -169,7 +170,12 @@ class LoginController {
                     .json({ msg: "Email not registered" });
             }
 
-            user.sendEmail(process.env.ADMIN_EMAIL, 'Your Password', `Hi there, your password is ${user.password}`);
+            user.sendEmail(emailTemplate.password(user.password), (err, info) => {
+                if(err) {
+                    return console.log(err);
+                }
+                console.log('Message sent: %s', info.messageId)
+            });
 
             // found user, and password matches
             return res.status(200).json({success: true});
