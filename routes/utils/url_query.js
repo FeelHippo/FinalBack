@@ -19,6 +19,9 @@ const filter_ads = (req) => {
         params.tags[0] = JSON.parse(req.query.tags)[0];
         params.tags[1] = JSON.parse(req.query.tags)[1];
     }
+
+    params.photo = photo = req.file.filename || '';
+
     return params;
 }
 

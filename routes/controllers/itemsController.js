@@ -93,9 +93,15 @@ class ItemsController {
             if(!errors.isEmpty()) {
                 return res.status(422).json({ msg: "Something Went Wrong, Try Again." })
             };
-            const newItem = new Item(req.body);
+            const newItem = new Item({
+                name: req.body.name,
+                price: req.body.price,
+                type: req.body.type === "true" ? true : false,
+                description: req.body.description,
+                tags: [req.body.tag1, req.body.tag2],
+                photo: req.file.filename,
+            });
             const savedItem = await newItem.save();
-
             res.status(201).send(savedItem);
         } catch (error) {
             console.log(error);

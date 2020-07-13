@@ -1,5 +1,6 @@
 const { check } = require('express-validator');
 const itemsController = require('../controllers/itemsController');
+const upload = require('../utils/fileUpload');
 
 module.exports = (app) => {
     // return most recent ads
@@ -12,8 +13,8 @@ module.exports = (app) => {
     app.get(`/api/item`, itemsController.search);
     app.get(`/api/:username`, itemsController.user)
     // create ad, validate URL
-    app.post(`/api/item`, [
-        check('name').custom((value,{req})=>{
+    app.post(`/api/item`, upload.single('photo'), [
+        check('name').custom((value)=>{
             if(isNaN(value)){
                 return true;
             }else{
@@ -22,7 +23,7 @@ module.exports = (app) => {
         }),
         check('type').isBoolean(),
         check('price').isNumeric().withMessage('Must be a higher than zero'),  
-    ] , itemsController.add);
+    ], itemsController.add);
     // modify ad
     app.put(`/api/item/change/`, itemsController.modify);
     // delete ad
