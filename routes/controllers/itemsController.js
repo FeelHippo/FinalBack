@@ -111,7 +111,20 @@ class ItemsController {
     async modify (req, res) {
         const { _id } = req.body;
         try {
-            let item = await Item.findByIdAndUpdate(_id, req.body);
+            const errors = validationResult(req);
+            if(!errors.isEmpty()) {
+                return res.status(422).json({ msg: "Something Went Wrong, Try Again." })
+            };
+            const newItem = {
+                name: req.body.name,
+                price: req.body.price,
+                type: req.body.type === "true" ? true : false,
+                description: req.body.description,
+                tags: [req.body.tag1, req.body.tag2],
+                photo: req.file.filename.length ? req.file.filename : undefined,
+            };
+
+            let item = await Item.findByIdAndUpdate(_id, newItem);
             if(!item) {
                 return res.status(422).json({ msg: "Something Went Wrong, Try Again." })
             } else {
@@ -141,7 +154,7 @@ class ItemsController {
                         })
                     })
                 }
-                return res.status(201).json(item);
+                return res.status(201).json({success: true})
             }
         } catch (error) {
             console.log(error);

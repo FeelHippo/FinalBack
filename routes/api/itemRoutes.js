@@ -22,10 +22,10 @@ module.exports = (app) => {
             }
         }),
         check('type').isBoolean(),
-        check('price').isNumeric().withMessage('Must be a higher than zero'),  
+        check('price').isNumeric().withMessage('Must be higher than zero'),  
     ], itemsController.add);
     // modify ad
-    app.put(`/api/item/change/`, itemsController.modify);
+    app.put(`/api/item/change/`, upload.single('photo'), itemsController.modify);
     // delete ad
     app.delete(`/api/item/:id`, itemsController.delete);
 }
