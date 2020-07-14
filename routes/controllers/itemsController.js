@@ -36,7 +36,7 @@ class ItemsController {
         try {
             let params = filter_ads(req);
             let items = await Item.find(params);
-            if (items) {
+            if (items.length) {
                 return res.status(200).json(items);
             } else {
                 return res
