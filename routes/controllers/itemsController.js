@@ -94,7 +94,7 @@ class ItemsController {
                 return res.status(422).json({ msg: "Something Went Wrong, Try Again." })
             };
             const newItem = new Item({
-                name: req.body.name,
+                name: req.body.name.toLowerCase(),
                 price: req.body.price,
                 type: req.body.type === "true" ? true : false,
                 description: req.body.description,
@@ -163,8 +163,7 @@ class ItemsController {
 
     async delete (req, res) {
         const { id } = req.params;
-
-        let item = await Item.findByIdAndDelete(id);
+        let item = await Item.findOneAndRemove({ _id: id });
         if(!item) {
             return res.status(422).json({ msg: "Something Went Wrong, Try Again." })
         } else {
